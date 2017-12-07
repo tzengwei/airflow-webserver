@@ -8,7 +8,7 @@ The goal of this Airflow Webserver fork is to leverage FAB's build-in security f
 - dag-level permissions
 - support for various authentications backends (OAuth, OpenID, Database, LDAP, etc.)
 
-See 104.209.38.171:8080 for a demo Airflow instance (username: admin, password: admin)
+See [this link](http://104.209.38.171:8080) for a demo Airflow instance (username: admin, password: admin)
 
 Airflow-Webserver will potentially be merged back into Airflow's source code in the near future.
 
