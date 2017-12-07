@@ -1983,11 +1983,12 @@ class ConnectionModelView(AirflowModelView):
 
     datamodel = CustomSQLAInterfaceWrapper(models.Connection)
 
-    list_columns = ['conn_id', 'conn_type', 'host', 'port', 'is_encrypted', 'is_extra_encrypted']
-    add_columns = edit_columns = ['conn_id', 'conn_type', 'host', 'schema', 'login', 'password', 'port', 'extra',
-                   'extra__jdbc__drv_path', 'extra__jdbc__drv_clsname', 'extra__google_cloud_platform__project',
+    extra_fields = ['extra__jdbc__drv_path', 'extra__jdbc__drv_clsname', 'extra__google_cloud_platform__project',
                    'extra__google_cloud_platform__key_path', 'extra__google_cloud_platform__keyfile_dict',
                    'extra__google_cloud_platform__scope']
+    list_columns = ['conn_id', 'conn_type', 'host', 'port', 'is_encrypted', 'is_extra_encrypted']
+    add_columns = edit_columns = ['conn_id', 'conn_type', 'host', 'schema', 'login', 'password', 'port', 'extra'] + extra_fields
+
     add_form = edit_form = ConnectionForm
     add_template = 'airflow/conn_create.html'
     edit_template = 'airflow/conn_edit.html'
@@ -1999,6 +2000,26 @@ class ConnectionModelView(AirflowModelView):
         self.datamodel.delete_all(items)
         self.update_redirect()
         return redirect(self.get_redirect())
+
+    def process_form(self, form, is_created):
+        formdata = form.data
+        if formdata['conn_type'] in ['jdbc', 'google_cloud_platform']:
+            extra = {
+                key: formdata[key]
+                for key in self.extra_fields if key in formdata}
+        form.extra.data = json.dumps(extra)
+
+    def prefill_form(self, form, pk):
+        try:
+            d = json.loads(form.data.get('extra', '{}'))
+        except Exception:
+            d = {}
+
+        for field in self.extra_fields:
+            value = d.get(field, '')
+            if value:
+                field = getattr(form, field)
+                field.data = value
 
 
 class PoolModelView(AirflowModelView):
