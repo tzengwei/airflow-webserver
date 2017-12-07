@@ -95,7 +95,6 @@ viewer_perms = [
     'can_pickle_info'
     'can_conf',
     'can_version',
-    'can_refresh',
 ]
 
 action_perms = [
@@ -110,16 +109,13 @@ action_perms = [
     'can_delete',
     'can_varimport',
     'can_paused',
+    'can_refresh',
     'can_success',
     'can_muldelete',
     'set_failed',
     'set_running', 
     'set_success',
     'clear',
-
-    # TODO: can_query is no longer safe since now db contains permission-related data.
-    # Need to prevent certain tables from being queried.
-    # 'can_query',
 ]
 
 def is_viewer_pvm(pvm):
