@@ -1743,10 +1743,6 @@ class HomeView(AirflowBaseView):
         session = Session()
         DM = models.DagModel
 
-        # restrict the dags shown if filter_by_owner and current user is not superuser
-        do_filter = FILTER_BY_OWNER and (not current_user.is_superuser())
-        owner_mode = conf.get('webserver', 'OWNER_MODE').strip().lower()
-
         hide_paused_dags_by_default = conf.getboolean('webserver',
                                                       'hide_paused_dags_by_default')
         show_paused_arg = request.args.get('showPaused', 'None')
@@ -1771,23 +1767,9 @@ class HomeView(AirflowBaseView):
             hide_paused = hide_paused_dags_by_default
 
         # read orm_dags from the db
-        sql_query = session.query(DM)
-
-        if do_filter and owner_mode == 'ldapgroup':
-            sql_query = sql_query.filter(
-                ~DM.is_subdag,
-                DM.is_active,
-                DM.owners.in_(current_user.ldap_groups)
-            )
-        elif do_filter and owner_mode == 'user':
-            sql_query = sql_query.filter(
-                ~DM.is_subdag, DM.is_active,
-                DM.owners == current_user.user.username
-            )
-        else:
-            sql_query = sql_query.filter(
-                ~DM.is_subdag, DM.is_active
-            )
+        sql_query = session.query(DM).filter(
+            ~DM.is_subdag, DM.is_active
+        )
 
         # optionally filter out "paused" dags
         if hide_paused:
@@ -1816,26 +1798,10 @@ class HomeView(AirflowBaseView):
             unfiltered_webserver_dags = [dag for dag in dagbag.dags.values() if
                                          not dag.parent_dag]
 
-        # optionally filter to get only dags that the user should see
-        if do_filter and owner_mode == 'ldapgroup':
-            # only show dags owned by someone in @current_user.ldap_groups
-            webserver_dags = {
-                dag.dag_id: dag
-                for dag in unfiltered_webserver_dags
-                if dag.owner in current_user.ldap_groups
-            }
-        elif do_filter and owner_mode == 'user':
-            # only show dags owned by @current_user.user.username
-            webserver_dags = {
-                dag.dag_id: dag
-                for dag in unfiltered_webserver_dags
-                if dag.owner == current_user.user.username
-            }
-        else:
-            webserver_dags = {
-                dag.dag_id: dag
-                for dag in unfiltered_webserver_dags
-            }
+        webserver_dags = {
+            dag.dag_id: dag
+            for dag in unfiltered_webserver_dags
+        }
 
         if arg_search_query:
             lower_search_query = arg_search_query.lower()
