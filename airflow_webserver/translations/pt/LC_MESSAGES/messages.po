@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.0\n"
 
-#: app/templates/404.html:4
+#: airflow_webserver/templates/404.html:4
 msgid "Page not found"
 msgstr "Página não encontrada"
 
