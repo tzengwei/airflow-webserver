@@ -78,10 +78,10 @@ from airflow.utils.db import provide_session
 from airflow.utils.helpers import alchemy_to_dict
 from airflow.utils.dates import infer_time_unit, scale_time_units
 
-from app import appbuilder, db
-from app.forms import DateTimeForm, DateTimeWithNumRunsForm, DagRunForm, ConnectionForm
-from app.validators import GreaterEqualThan
-from app import utils as wwwutils
+from airflow_webserver import appbuilder, db
+from airflow_webserver.forms import DateTimeForm, DateTimeWithNumRunsForm, DagRunForm, ConnectionForm
+from airflow_webserver.validators import GreaterEqualThan
+from airflow_webserver import utils as wwwutils
 
 QUERY_LIMIT = 100000
 CHART_LIMIT = 200000
