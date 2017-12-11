@@ -17,7 +17,7 @@ from setuptools.command.test import test as TestCommand
 
 import imp
 
-version = imp.load_source('airflow-webserver.version', 'version.py').version
+version = imp.load_source('airflow-webserver.version', 'airflow_webserver/version.py').version
 
 def do_setup():
     setup(
