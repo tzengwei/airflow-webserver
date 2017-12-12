@@ -32,7 +32,7 @@ db = SQLA(app)
 """
 from airflow import api
 api.load_auth()
-from app.api.experimental import endpoints as e
+from airflow_webserver.api.experimental import endpoints as e
 # required for testing purposes otherwise the module retains
 # a link to the default_auth
 if app.config['TESTING']:
@@ -77,7 +77,7 @@ appbuilder = AppBuilder(
 """
  Initialize views
 """
-from app import views
+from airflow_webserver import views
 appbuilder.add_view_no_menu(views.HomeView())
 appbuilder.add_view_no_menu(views.Airflow())
 appbuilder.add_view_no_menu(views.DagModelView())
@@ -105,4 +105,4 @@ appbuilder.add_link('Version', href='/version', category='About', category_icon=
 """
  Initialize Role-Based Access Control
 """
-from app import security
+from airflow_webserver import security

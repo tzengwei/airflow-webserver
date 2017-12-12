@@ -14,6 +14,6 @@
 
 include README.md
 include config.py
-graft app/static
-graft app/templates
-graft app/translations
+graft airflow_webserver/static
+graft airflow_webserver/templates
+graft airflow_webserver/translations

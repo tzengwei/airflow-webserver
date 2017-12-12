@@ -25,7 +25,7 @@ import dateutil.parser as dateparser
 import json
 import time
 
-from flask import after_this_request, request, Response
+from flask import after_this_request, request, Response, g
 from flask_login import current_user
 import wtforms
 from wtforms.compat import text_type
@@ -49,32 +49,6 @@ DEFAULT_SENSITIVE_VARIABLE_FIELDS = (
 def should_hide_value_for_key(key_name):
     return any(s in key_name.lower() for s in DEFAULT_SENSITIVE_VARIABLE_FIELDS) \
            and configuration.getboolean('admin', 'hide_sensitive_variable_fields')
-
-
-class LoginMixin(object):
-    def is_accessible(self):
-        return (
-            not AUTHENTICATE or (
-                not current_user.is_anonymous() and
-                current_user.is_authenticated()
-            )
-        )
-
-
-class SuperUserMixin(object):
-    def is_accessible(self):
-        return (
-            not AUTHENTICATE or
-            (not current_user.is_anonymous() and current_user.is_superuser())
-        )
-
-
-class DataProfilingMixin(object):
-    def is_accessible(self):
-        return (
-            not AUTHENTICATE or
-            (not current_user.is_anonymous() and current_user.data_profiling())
-        )
 
 
 def get_params(**kwargs):
@@ -238,10 +212,11 @@ def action_logging(f):
     '''
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        if current_user and hasattr(current_user, 'username'):
-            user = current_user.username
-        else:
+        if g.user.is_anonymous():
             user = 'anonymous'
+        else:
+            user = g.user.username
+
 
         log = models.Log(
             event=f.__name__,

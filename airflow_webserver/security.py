@@ -14,7 +14,7 @@
 
 from flask_appbuilder.security.sqla import models as sqla_models
 
-from app import appbuilder
+from airflow_webserver import appbuilder
 sm = appbuilder.sm
 
 vms = [
