@@ -1910,7 +1910,7 @@ class CustomSQLAInterfaceWrapper(SQLAInterface):
 class SlaMissModelView(AirflowModelViewReadOnly):
     route_base='/slamiss'
 
-    datamodel = SQLAInterface(models.SlaMiss)
+    datamodel = CustomSQLAInterfaceWrapper(models.SlaMiss)
 
     list_columns = ['dag_id', 'task_id', 'execution_date', 'email_sent', 'timestamp']
     add_columns = ['dag_id', 'task_id', 'execution_date', 'email_sent', 'timestamp']
@@ -1928,7 +1928,7 @@ class SlaMissModelView(AirflowModelViewReadOnly):
 class XComModelView(AirflowModelView):
     route_base='/xcom'
 
-    datamodel = SQLAInterface(models.XCom)
+    datamodel = CustomSQLAInterfaceWrapper(models.XCom)
 
     search_columns = ['key', 'value', 'timestamp', 'execution_date', 'task_id', 'dag_id']
     list_columns = ['key', 'value', 'timestamp', 'execution_date', 'task_id', 'dag_id']
@@ -1943,7 +1943,6 @@ class XComModelView(AirflowModelView):
         return redirect(self.get_redirect())
 
 
-# todo: implement on_form_prefill to register custom field input
 class ConnectionModelView(AirflowModelView):
     route_base='/connection'
 
@@ -1973,7 +1972,7 @@ class ConnectionModelView(AirflowModelView):
             extra = {
                 key: formdata[key]
                 for key in self.extra_fields if key in formdata}
-        form.extra.data = json.dumps(extra)
+            form.extra.data = json.dumps(extra)
 
     def prefill_form(self, form, pk):
         try:
@@ -1991,7 +1990,7 @@ class ConnectionModelView(AirflowModelView):
 class PoolModelView(AirflowModelView):
     route_base='/pool'
 
-    datamodel = SQLAInterface(models.Pool)
+    datamodel = CustomSQLAInterfaceWrapper(models.Pool)
 
     list_columns = ['pool', 'slots', 'used_slots', 'queued_slots']
     add_columns = ['pool', 'slots', 'description']
@@ -2103,7 +2102,7 @@ class VariableModelView(AirflowModelView):
 class JobModelView(AirflowModelViewReadOnly):
     route_base='/job'
 
-    datamodel = SQLAInterface(jobs.BaseJob)
+    datamodel = CustomSQLAInterfaceWrapper(jobs.BaseJob)
 
     list_columns = ['id', 'dag_id', 'state', 'job_type', 'start_date', 'end_date', 'latest_heartbeat',
                     'executor_class', 'hostname', 'unixname']
@@ -2124,7 +2123,6 @@ class JobModelView(AirflowModelViewReadOnly):
 class DagRunModelView(AirflowModelView):
     route_base='/dagrun'
 
-    # removed delete permission
     base_permissions = ['can_add', 'can_list', 'can_edit']
 
     datamodel = CustomSQLAInterfaceWrapper(models.DagRun)
@@ -2145,9 +2143,9 @@ class DagRunModelView(AirflowModelView):
         'dag_id':dag_link,
     }
 
-    # validators_columns = {
-    #     'dag_id': [ validators.DataRequired() ]
-    # }
+    validators_columns = {
+        'dag_id': [ validators.DataRequired() ]
+    }
 
     @action('muldelete', "Delete", "Are you sure you want to delete selected records?", single=False)
     def action_muldelete(self, items):
@@ -2200,7 +2198,7 @@ class DagRunModelView(AirflowModelView):
 class LogModelView(AirflowModelViewReadOnly):
     route_base = '/log'
 
-    datamodel = SQLAInterface(models.Log)
+    datamodel = CustomSQLAInterfaceWrapper(models.Log)
 
     list_columns = ['id', 'dttm', 'dag_id', 'task_id', 'event', 'execution_date', 'owner', 'extra']
     search_columns = ['dag_id', 'task_id', 'execution_date']
@@ -2218,7 +2216,7 @@ class LogModelView(AirflowModelViewReadOnly):
 class TaskInstanceModelView(AirflowModelViewReadOnly):
     route_base='/taskinstance'
 
-    datamodel = SQLAInterface(models.TaskInstance)
+    datamodel = CustomSQLAInterfaceWrapper(models.TaskInstance)
     page_size = PAGE_SIZE
 
     list_columns = ['state', 'dag_id', 'task_id', 'execution_date', 'operator',
@@ -2410,7 +2408,7 @@ class DagModelView(AirflowModelView):
 
     page_size = PAGE_SIZE
 
-    datamodel = SQLAInterface(models.DagModel)
+    datamodel = CustomSQLAInterfaceWrapper(models.DagModel)
 
     base_permissions = ['can_show', 'can_list']
 

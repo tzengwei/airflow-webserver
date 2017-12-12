@@ -31,7 +31,6 @@ import wtforms
 from wtforms.compat import text_type
 
 from airflow import configuration, models, settings
-from airflow.utils.db import create_session
 from airflow.utils.json import AirflowJsonEncoder
 
 AUTHENTICATE = configuration.getboolean('webserver', 'AUTHENTICATE')
@@ -212,6 +211,7 @@ def action_logging(f):
     '''
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        session = settings.Session()
         if g.user.is_anonymous():
             user = 'anonymous'
         else:
@@ -230,9 +230,8 @@ def action_logging(f):
             log.execution_date = dateparser.parse(
                 request.args.get('execution_date'))
 
-        with create_session() as session:
-            session.add(log)
-            session.commit()
+        session.add(log)
+        session.commit()
 
         return f(*args, **kwargs)
 
