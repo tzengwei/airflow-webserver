@@ -35,7 +35,7 @@ Airflow-Webserver is written on top of Airflow 1.9.0, which is not currently in 
 
 - To start the webserver
 
-        `fabmanager run`
+        `fabmanager run --app airflow_webserver`
 
 Caveats
 --------------------------------------------------------------
