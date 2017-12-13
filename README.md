@@ -17,7 +17,7 @@ Contributions are welcome!
 Setup
 --------------------------------------------------------------
 
-Airflow-Webserver is written on top of Airflow 1.9.0, which is not currently in PyPI. Make sure you have airflow 1.9.0 or above installed before attempting the setup below.
+Airflow-Webserver is written on top of Airflow 1.9.0, which is not currently in PyPI. Make sure you have airflow 1.9.0 installed before attempting the setup below.
 
 - To install Flask-AppBuilder
 
