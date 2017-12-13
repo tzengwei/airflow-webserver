@@ -14,13 +14,14 @@
 
 import six
 import socket
-from airflow import settings
+from airflow import settings, configuration
 from flask import Flask, redirect
 from flask_appbuilder import SQLA, AppBuilder, IndexView, expose
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
 app.config.from_object('config')
+app.secret_key = configuration.get('webserver', 'SECRET_KEY')
 
 csrf = CSRFProtect()
 csrf.init_app(app)
