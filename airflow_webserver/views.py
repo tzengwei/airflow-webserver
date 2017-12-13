@@ -2341,9 +2341,8 @@ class VersionView(AirflowBaseView):
     @expose('version')
     @has_access
     def version(self):
-        # Look at the version from setup.py
         try:
-            airflow_version = pkg_resources.require("apache-airflow")[0].version
+            airflow_version = airflow.__version__
         except Exception as e:
             airflow_version = None
             logging.error(e)
