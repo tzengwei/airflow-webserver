@@ -33,8 +33,6 @@ vms = [
     'JobModelView',
     'Logs',
     'LogModelView',
-    'Configurations',
-    'ConfigurationView',
     'XComs',
     'XComModelView',
     'Connections',
@@ -68,6 +66,9 @@ security_vms = [
     'Views/Menus',
     'PermissionViewModelView',
     'Views/Menus',
+
+    'Configurations',
+    'ConfigurationView',
 ]
 
 viewer_perms = [
