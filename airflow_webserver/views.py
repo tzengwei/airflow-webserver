@@ -1953,7 +1953,6 @@ class ConnectionModelView(AirflowModelView):
                    'extra__google_cloud_platform__scope']
     list_columns = ['conn_id', 'conn_type', 'host', 'port', 'is_encrypted', 'is_extra_encrypted']
     add_columns = edit_columns = ['conn_id', 'conn_type', 'host', 'schema', 'login', 'password', 'port', 'extra'] + extra_fields
-
     add_form = edit_form = ConnectionForm
     add_template = 'airflow/conn_create.html'
     edit_template = 'airflow/conn_edit.html'
@@ -2042,8 +2041,6 @@ class PoolModelView(AirflowModelView):
     }
 
 
-# todo: implement on_form_prefill to register custom field input
-# todo: configure form_widget_args
 class VariableModelView(AirflowModelView):
     route_base='/variable'
 
@@ -2075,6 +2072,10 @@ class VariableModelView(AirflowModelView):
     validators_columns = {
         'key': [ validators.DataRequired() ]
     }
+
+    def prefill_form(self, form, id):
+        if wwwutils.should_hide_value_for_key(form.key.data):
+            form.val.data = '*' * 8
 
     @action('muldelete', 'Delete', 'Are you sure you want to delete selected records?', single=False)
     def action_muldelete(self, items):
@@ -2212,7 +2213,6 @@ class LogModelView(AirflowModelViewReadOnly):
     }
 
 
-# todo: add back get_one method if necessary
 class TaskInstanceModelView(AirflowModelViewReadOnly):
     route_base='/taskinstance'
 
