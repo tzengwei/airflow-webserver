@@ -147,13 +147,26 @@ def datetime_f(field):
     return datetime_f_helper
 
 def dag_link(attr):
-    dag_id = attr.get('dag_id')
-    dag_id = bleach.clean(dag_id)
+    dag_id = bleach.clean(attr.get('dag_id'))
+    execution_date = attr.get('execution_date')
     url = url_for(
         'Airflow.graph',
-        dag_id=dag_id)
+        dag_id=dag_id,
+        execution_date=execution_date)
     return Markup(
         '<a href="{}">{}</a>'.format(url, dag_id))
+
+def dag_run_link(attr):
+    dag_id = bleach.clean(attr.get('dag_id'))
+    run_id = bleach.clean(attr.get('run_id'))
+    execution_date = attr.get('execution_date')
+    url = url_for(
+        'Airflow.graph',
+        dag_id=dag_id,
+        run_id=run_id,
+        execution_date=execution_date)
+    return Markup(
+        '<a href="{url}">{run_id}</a>'.format(**locals()))
 
 def pygment_html_render(s, lexer=lexers.TextLexer):
     return highlight(
@@ -2141,7 +2154,8 @@ class DagRunModelView(AirflowModelView):
         'execution_date': datetime_f('execution_date'),
         'state': state_f,
         'start_date': datetime_f('start_date'),
-        'dag_id':dag_link,
+        'dag_id': dag_link,
+        'run_id': dag_run_link,
     }
 
     validators_columns = {
@@ -2263,11 +2277,10 @@ class TaskInstanceModelView(AirflowModelViewReadOnly):
     }
 
     @provide_session
-    @action('clear', 'Clear', 'Are you sure you want to clear the state of the selected task instance(s) and set their dagruns to the running state?', single=False)
+    @action('clear', lazy_gettext('Clear'), lazy_gettext('Are you sure you want to clear the state of the'
+                ' selected task instance(s) and set their dagruns to the running state?'), single=False)
     def action_clear(self, tis, session=None):
         try:
-            TI = models.TaskInstance
-
             dag_to_tis = {}
 
             for ti in tis:
@@ -2289,7 +2302,6 @@ class TaskInstanceModelView(AirflowModelViewReadOnly):
     @provide_session
     def set_task_instance_state(self, tis, target_state, session=None):
         try:
-            TI = models.TaskInstance
             count = len(tis)
             for ti in tis:
                 ti.set_state(target_state, session)
