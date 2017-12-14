@@ -174,6 +174,7 @@ def init_role(role_name, role_config):
     for pvm in pvms:
         if pvm.view_menu.name in valid_vms and pvm.permission.name in valid_perms:
             role_pvms.append(pvm)
+    role_pvms = list(set(role_pvms))
     role.permissions = role_pvms
     session.merge(role)
     session.commit()
