@@ -19,19 +19,23 @@ Setup
 
 Airflow-Webserver is written on top of Airflow 1.9.0, which is not currently in PyPI. Make sure you have airflow 1.9.0 installed before attempting the setup below.
 
-- To install Flask-AppBuilder
+- Clone the repo
+
+        `git clone git@github.com:wepay/airflow-webserver.git`
+        `cd airflow-webserver`
+
+- Install Flask-AppBuilder
 
         `pip install flask-appbuilder`
 
-- To set up the database object, modify the SQLALCHEMY_DATABASE_URI variable in config.py to your Airflow db.
+- To set up the database object, modify the SQLALCHEMY_DATABASE_URI variable in `config.py` to your Airflow db.
   Note this will generate new tables which FAB uses for its security model.
   
-        `cd flask-appbuilder`
-        `fabmanager create-db`
+        `fabmanager create-db --app airflow_webserver`
 
 - To create an admin account
 
-        `fabmanager create-admin`
+        `fabmanager create-admin --app airflow_webserver`
 
 - To start the webserver
 
