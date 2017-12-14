@@ -106,4 +106,5 @@ appbuilder.add_link('Version', href='/version', category='About', category_icon=
 """
  Initialize Role-Based Access Control
 """
-from airflow_webserver import security
+from airflow_webserver.security import init_roles
+init_roles()

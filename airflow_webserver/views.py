@@ -80,6 +80,7 @@ from airflow.utils.dates import infer_time_unit, scale_time_units
 
 from airflow_webserver import appbuilder, db
 from airflow_webserver.forms import DateTimeForm, DateTimeWithNumRunsForm, DagRunForm, ConnectionForm
+from airflow_webserver.security import is_view_only
 from airflow_webserver.validators import GreaterEqualThan
 from airflow_webserver import utils as wwwutils
 
@@ -1867,7 +1868,8 @@ class HomeView(AirflowBaseView):
                                            search=arg_search_query,
                                            showPaused=not hide_paused),
             dag_ids_in_page=page_dag_ids,
-            auto_complete_data=auto_complete_data)
+            auto_complete_data=auto_complete_data,
+            view_only=is_view_only(g.user))
 
 
 
@@ -2137,13 +2139,11 @@ class JobModelView(AirflowModelViewReadOnly):
 class DagRunModelView(AirflowModelView):
     route_base='/dagrun'
 
-    base_permissions = ['can_add', 'can_list', 'can_edit']
-
     datamodel = CustomSQLAInterfaceWrapper(models.DagRun)
 
+    base_permissions = ['can_list']
+
     list_columns = ['state', 'dag_id', 'execution_date', 'run_id', 'external_trigger']
-    add_columns = ['state', 'dag_id', 'execution_date', 'start_date', 'end_date', 'run_id', 'external_trigger']
-    edit_columns = ['state', 'dag_id', 'execution_date', 'start_date', 'end_date', 'run_id', 'external_trigger']
     search_columns = ['state', 'dag_id', 'execution_date', 'run_id', 'external_trigger']
 
     base_order = ('execution_date', 'desc')
@@ -2227,24 +2227,20 @@ class LogModelView(AirflowModelViewReadOnly):
     }
 
 
-class TaskInstanceModelView(AirflowModelViewReadOnly):
+class TaskInstanceModelView(AirflowModelView):
     route_base='/taskinstance'
 
     datamodel = CustomSQLAInterfaceWrapper(models.TaskInstance)
+
+    base_permissions = ['can_list']
+
     page_size = PAGE_SIZE
 
     list_columns = ['state', 'dag_id', 'task_id', 'execution_date', 'operator',
         'start_date', 'end_date', 'duration', 'job_id', 'hostname',
         'unixname', 'priority_weight', 'queue', 'queued_dttm', 'try_number',
         'pool', 'log_url']
-    add_columns = ['state', 'dag_id', 'task_id', 'execution_date', 'operator',
-        'start_date', 'end_date', 'duration', 'job_id', 'hostname',
-        'unixname', 'priority_weight', 'queue', 'queued_dttm', 'try_number',
-        'pool']
-    edit_columns = ['state', 'dag_id', 'task_id', 'execution_date', 'operator',
-        'start_date', 'end_date', 'duration', 'job_id', 'hostname',
-        'unixname', 'priority_weight', 'queue', 'queued_dttm', 'try_number',
-        'pool']
+
     search_columns = ['state', 'dag_id', 'task_id', 'execution_date', 'hostname',
         'queue', 'pool', 'operator', 'start_date', 'end_date']
 
