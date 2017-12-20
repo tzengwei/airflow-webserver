@@ -19,9 +19,11 @@ from flask import Flask, redirect
 from flask_appbuilder import SQLA, AppBuilder, IndexView, expose
 from flask_wtf.csrf import CSRFProtect
 
+wsconfig = configuration.as_dict()['webserver']
+
 app = Flask(__name__)
 app.config.from_object('config')
-app.secret_key = configuration.get('webserver', 'SECRET_KEY')
+app.secret_key = wsconfig.get('secret_key')
 
 csrf = CSRFProtect()
 csrf.init_app(app)
@@ -70,6 +72,7 @@ class AirflowIndexView(IndexView):
 appbuilder = AppBuilder(
     app,
     db.session,
+    security_manager_class=app.config.get('SECURITY_MANAGER_CLASS'),
     base_template='appbuilder/baselayout.html',
     indexview=AirflowIndexView
 )
