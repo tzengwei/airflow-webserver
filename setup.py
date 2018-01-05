@@ -31,7 +31,7 @@ def do_setup():
         install_requires=[
 	    # this airflow package is hosted in our private PyPI repo
             'apache-airflow>=1.9.0.6',
-            'flask-appbuilder==1.9.5',
+            'flask-appbuilder==1.9.6',
         ],
 )
 
