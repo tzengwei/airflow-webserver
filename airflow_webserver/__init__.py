@@ -70,6 +70,7 @@ class AirflowIndexView(IndexView):
 appbuilder = AppBuilder(
     app,
     db.session,
+    security_manager_class=app.config.get('SECURITY_MANAGER_CLASS'),
     base_template='appbuilder/baselayout.html',
     indexview=AirflowIndexView
 )
