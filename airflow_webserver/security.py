@@ -22,7 +22,6 @@ sm = appbuilder.sm
 #                               VIEW MENUS
 ###########################################################################
 viewer_vms = [
-    'HomeView',
     'Airflow',
     'DagModelView',
     'Browse',
