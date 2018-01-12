@@ -5,14 +5,10 @@ NOTE: This is work-in-progress repository for the migration of [Airflow](https:/
 
 The goal of this Airflow Webserver fork is to leverage FAB's build-in security features to introduce the following capabilities in the UI:
 - role-based access control
-- dag-level permissions
 - support for various authentications backends (OAuth, OpenID, Database, LDAP, etc.)
+- dag-level permissions
 
-See [this link](http://104.209.38.171:8080) for a demo Airflow instance (username: admin, password: admin)
-
-Airflow-Webserver will potentially be merged back into Airflow's source code in the near future.
-
-Contributions are welcome!
+Airflow-Webserver will be merged back into Airflow's source code in the near future. Contributions are welcome!
 
 Setup
 --------------------------------------------------------------
@@ -41,15 +37,9 @@ Airflow-Webserver is written on top of Airflow 1.9.0, which is not currently in 
 
         `fabmanager run --app airflow_webserver`
 
-Caveats
---------------------------------------------------------------
-
-- I am actively contributing to Flask-Appbuilder to support backward-compatibility with existing Airflow features, and some of these features have not been rolled out to the latest release, including support for models with binary-type column and composite primary key. There are open PRs that are addressing these issues.
 
 Work-in-progress
 --------------------------------------------------------------
 
-- Verification of integrations with 3rd-party authentication backends
-- FAB features including support for [composite primary key](https://github.com/dpgaspar/Flask-AppBuilder/pull/639) and [on_model_change](https://github.com/dpgaspar/Flask-AppBuilder/pull/661)
 - DAG-level access control
 - Tests
