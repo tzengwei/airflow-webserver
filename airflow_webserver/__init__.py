@@ -80,7 +80,6 @@ appbuilder = AppBuilder(
  Initialize views
 """
 from airflow_webserver import views
-appbuilder.add_view_no_menu(views.HomeView())
 appbuilder.add_view_no_menu(views.Airflow())
 appbuilder.add_view_no_menu(views.DagModelView())
 appbuilder.add_view_no_menu(views.ConfigurationView())
